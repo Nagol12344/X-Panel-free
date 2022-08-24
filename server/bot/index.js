@@ -174,7 +174,7 @@ client.on('interactionCreate', async interaction => {
 		const coinInfo = await User.findOne({ 'discordId': interaction.targetUser.id })
 		console.log(userid)
 		if (!userInfo) { 
-			interaction.reply("Im sorry, but you can not use this command")
+			interaction.reply({content: "Im sorry, but you can not use this command", ephemeral: true})
 			return
 		}
 		 if (userInfo.staffRank >= 3) {
@@ -185,7 +185,7 @@ client.on('interactionCreate', async interaction => {
 				.setDescription(`This user isnt linked to the panel, so you cant give them coins`)
 				.setTimestamp()
 				.setFooter({ text: '©️ Force Host 2022', iconURL: 'https://media.discordapp.net/attachments/998356098165788672/1005994905253970050/force_png.png' });
-			await interaction.Reply({ content: '', embeds: [newEmbed]})	
+			await interaction.reply({ content: '', embeds: [newEmbed], ephemeral: true})	
 			}
 			const modal = new ModalBuilder()
 			.setCustomId('addcoin'+interaction.targetUser.id)
@@ -219,7 +219,7 @@ client.on('interactionCreate', async interaction => {
 			.setDescription(`This user isnt linked to the panel, so you cant give them coins`)
 			.setTimestamp()
 			.setFooter({ text: '©️ Force Host 2022', iconURL: 'https://media.discordapp.net/attachments/998356098165788672/1005994905253970050/force_png.png' });
-		await interaction.Reply({ content: '', embeds: [newEmbed]})
+		await interaction.reply({ content: '', embeds: [newEmbed], ephemeral: true})
 		}
 			
 		}
@@ -231,7 +231,7 @@ client.on('interactionCreate', async interaction => {
 	if (interaction.customId.includes("addcoin")) {
 		const cointoadd = interaction.fields.getTextInputValue('Coins');
 		if (isNaN(cointoadd)) {
-			await interaction.reply({ content: 'That is not a number, please use a number next time.' });
+			await interaction.reply({ content: 'That is not a number, please use a number next time.', ephemeral: true });
 			return;
 		}
 		const userInfo = await User.findOne({ 'discordId': interaction.user.id })
