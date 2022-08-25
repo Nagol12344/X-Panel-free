@@ -142,7 +142,8 @@ client.on('interactionCreate', async interaction => {
 			.setTimestamp()
 			.setFooter({ text: '©️ Force Host 2022', iconURL: 'https://media.discordapp.net/attachments/998356098165788672/1005994905253970050/force_png.png' });
 		await interaction.editReply({ content: '', embeds: [newEmbed]})
-			}else {
+			} 
+			else {
 			const newEmbed = new EmbedBuilder()
 			.setColor(0x0099FF)
 			.setTitle('Error!')
@@ -150,10 +151,24 @@ client.on('interactionCreate', async interaction => {
 			.setTimestamp()
 			.setFooter({ text: '©️ Force Host 2022', iconURL: 'https://media.discordapp.net/attachments/998356098165788672/1005994905253970050/force_png.png' });
 			await interaction.editReply({ content: '', embeds: [newEmbed]})
+		}}
+		if (interaction.commandName === 'announce') {
+			const role = interaction.options.getRole('role')
+			const title = interaction.options.getString('title')
+			const message = interaction.options.getString('message')
+			const Embed = new EmbedBuilder()
+			.setColor(0x0099FF)
+			.setTitle(title)
+			.setDescription(message)
+			.setTimestamp()
+			// .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
+			.setAuthor({ name: interaction.user.tag })
+			.setFooter({ text: '©️ Force Host 2022', iconURL: 'https://media.discordapp.net/attachments/998356098165788672/1005994905253970050/force_png.png' });
+			client.channels.cache.get('850136011967037480').send({content: `<@&${role.id}>`, embeds: [Embed]})
+			interaction.reply( {content: `You wanted to ping the role ${role.name}, with the tile of: ${title}, and the message of ${message}`, ephemeral: true } )
 		}
-		  
 	    
-	}
+	
 });
 
 client.on('interactionCreate', async interaction => {

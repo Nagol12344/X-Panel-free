@@ -17,9 +17,24 @@ const data3 = new SlashCommandBuilder()
 .addStringOption((option) => option.setName('code')
                  .setDescription('The unique code generated in the client area')
 				 .setRequired(true));
-      
+const data4 = new SlashCommandBuilder()
+	.setName('announce')
+	.setDescription('Sends a announcement')
+	.addRoleOption((option) => option.setName('role')
+		.setDescription("What role to ping")
+		.setRequired(true)
+	)
+	.addStringOption((option) => option.setName('title')
+		.setDescription("Title of your announcement")
+		.setRequired(true)
+	)
+	.addStringOption((option) => option.setName("message")
+	.setDescription("What you want your message to say")
+	.setRequired(true)
+	)
+    
 const commands = [
-	data1, data2, data3
+	data1, data2, data3, data4
 ]
 	.map(command => command.toJSON());
 
