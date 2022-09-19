@@ -14,15 +14,15 @@ const serversSechma = new mongoose.Schema({
         required: true,
     },
     serverMemory: {
-        type: String,
+        type: Number,
         required: true,
     },
     serverCPU: {
-        type: String,
+        type: Number,
         required: true,
     },
     serverDisk: {
-        type: String,
+        type: Number,
         required: true,
     },
     serverSuspended: {
@@ -31,8 +31,7 @@ const serversSechma = new mongoose.Schema({
         default: false
     },
     serverOwner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        type: String,
         required: true,
     }
 });

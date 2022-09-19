@@ -2,11 +2,41 @@ const { Client, GatewayIntentBits, EmbedBuilder, ModalBuilder, ActivityType, Tex
 const { token } = require("../config.json");
 const mongoose = require("mongoose")
 const User = require("../models/userModel");
+const Server = require("../models/servers");
+const Webhosting = require("../models/webhostingModel");
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 client.once('ready', () => {
     console.log("Bot is online, and ready!");
-  client.user.setActivity('my users data burn', { type: ActivityType.Watching });
+	
+	setInterval(
+		async () => {
+				const users = await User.find().count();
+				const servers = await Server.find().count();
+				const web = await Webhosting.find().count();
+				const usersChannel = client.guilds.cache.get('783416129908899860').channels.cache.get('1020537846542635079');
+				usersChannel.setName(`✨ ${users} users!`)
+				const serversChannel = client.guilds.cache.get('783416129908899860').channels.cache.get('1020539431670780027');
+				serversChannel.setName(`✨ ${servers} servers!`)
+				const webChannel = client.guilds.cache.get('783416129908899860').channels.cache.get('1020538820925603850');
+				webChannel.setName(`✨ ${web} websites!`)
+			var statusArray = [
+				`my.forcehost.net`,
+				`What is DAv2?`,
+				`When will the host be up?`,
+				`Happy Hosting`,
+				`Sept 23`,
+				`where is the client panel?`,
+				`If FH made an onlyfans, would you buy?`,
+				`with ${users} users`,
+				`on ${servers} servers`,
+				`on ${web} webistes`
+			]
+			var randomNumber = Math.floor(Math.random()*statusArray.length);
+			client.user.setActivity(statusArray[randomNumber], { type: ActivityType.Playing });
+		}, 5000
+	)
+
 })
 
 function userRegister(username){
@@ -26,6 +56,15 @@ function userLogin(username){
 	.setTimestamp()
 	.setFooter({ text: '©️ Force Host 2022', iconURL: 'https://media.discordapp.net/attachments/998356098165788672/1005994905253970050/force_png.png' });
     client.channels.cache.get('1006667890604388403').send({embeds: [newLoginEmbed]})
+}
+function newWebUser(username, domain){
+    const newLoginEmbed = new EmbedBuilder()
+	.setColor(0x0099FF)
+	.setTitle('New Web Hosting Account')
+	.setDescription(`${username} just created a free webhosting account. Domain: \`${domain}\``)
+	.setTimestamp()
+	.setFooter({ text: '©️ Force Host 2022', iconURL: 'https://media.discordapp.net/attachments/998356098165788672/1005994905253970050/force_png.png' });
+    client.channels.cache.get('1012424743347040256').send({embeds: [newLoginEmbed]})
 }
 function sendErrorCode(code, message){
     const newLoginEmbed = new EmbedBuilder()
@@ -67,6 +106,40 @@ function addedToQueue(username, servername, servermem, servercpu, serverdisk){
 	.setTimestamp()
 	.setFooter({ text: '©️ Force Host 2022', iconURL: 'https://media.discordapp.net/attachments/998356098165788672/1005994905253970050/force_png.png' });
     client.channels.cache.get('1006679200159248414').send({embeds: [newLoginEmbed]})
+}
+
+function createdServer(username, servername, servermem, servercpu, serverdisk, node, pteroId){
+    const newLoginEmbed = new EmbedBuilder()
+	.setColor(0x0099FF)
+	.setTitle('New Server Created')
+	.setDescription(`The user ${username} just created their server.`)
+    .addFields(
+        { name: 'Name', value: `${servername}`, inline: true},
+        { name: 'Memory', value: `${servermem}`, inline: true},
+        { name: 'CPU', value: `${servercpu}`, inline: true},
+        { name: 'Disk', value: `${serverdisk}`, inline: true},
+		{ name: 'Node', value: `${node}`, inline: true},
+		{ name: 'Pterodactyl ID', value: `${pteroId}`, inline: true}
+    )
+	.setTimestamp()
+	.setFooter({ text: '©️ Force Host 2022', iconURL: 'https://media.discordapp.net/attachments/998356098165788672/1005994905253970050/force_png.png' });
+    client.channels.cache.get('1008535854760857601').send({embeds: [newLoginEmbed]})
+}
+
+function deletedServer(username, servermem, servercpu, serverdisk, node){
+    const newLoginEmbed = new EmbedBuilder()
+	.setColor('DarkRed')
+	.setTitle('Server Deleted')
+	.setDescription(`The user ${username} just deleted their server.`)
+    .addFields(
+        { name: 'Memory', value: `${servermem}`, inline: true},
+        { name: 'CPU', value: `${servercpu}`, inline: true},
+        { name: 'Disk', value: `${serverdisk}`, inline: true},
+		{ name: 'Node', value: `${node}`, inline: true},
+    )
+	.setTimestamp()
+	.setFooter({ text: '©️ Force Host 2022', iconURL: 'https://media.discordapp.net/attachments/998356098165788672/1005994905253970050/force_png.png' });
+    client.channels.cache.get('1008535854760857601').send({embeds: [newLoginEmbed]})
 }
 
 function Addedcoins(giver,accepter,coins){
@@ -241,4 +314,4 @@ client.on('interactionCreate', async interaction => {
 })
 
 client.login(token);
-module.exports =  { userLogin, newTicketAlert, userRegister, addedToQueue, sendErrorCode };
+module.exports =  { userLogin, newTicketAlert, userRegister, addedToQueue, sendErrorCode, newWebUser, createdServer, deletedServer };
