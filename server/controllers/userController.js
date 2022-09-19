@@ -3,7 +3,7 @@ const Servers = require("../models/servers");
 const bcrypt = require("bcrypt");
 const ShortUniqueId = require("short-unique-id");
 const uid = new ShortUniqueId({ length: 10 });
-const { makeid, getIP } = require('../functions')
+const { makeid, getIP, sendWelcome } = require('../functions')
 const { userLogin, userRegister, sendErrorCode } = require('../bot/index');
 const fetch = require('node-fetch');
 const {pteroKey} = require('../config.json');
@@ -42,9 +42,6 @@ module.exports.getData = async (req, res, next) => {
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid)
         return res.json({ msg: "Incorrect Email or Password", status: false });
-      const checkIP = await User.find({ userIP }).count();
-      if(checkIP > 1)
-         return res.json({ msg: "Another account is already using that IP address. Please contact support.", status: false });
         const userData = await User.findOne({ email }).select([
           "_id",
           "uid",
@@ -155,6 +152,7 @@ module.exports.register = async (req, res, next) => {
       "role",
     ]);
     userRegister(user.username)
+    sendWelcome(userData.email)
     return res.json({ status: true, userData });
   } catch (ex) {
     next(ex);
